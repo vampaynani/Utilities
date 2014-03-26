@@ -58,18 +58,24 @@ class PDODB{
 		$STH->execute( $data );
 		return $this->DBH->lastInsertId();
 	}
-	protected function _all( $fields ){
+	protected function _all( $fields, $limit = NULL, $orderby = NULL ){
 		$result = array();
-		$STH = $this->DBH->query("SELECT $fields FROM " . $this->table);
+		$query = "SELECT $fields FROM " . $this->table;
+		if($limit) $query .= " LIMIT $limit";
+		if($orderby) $query .= " ORDER BY $orderby";
+		$STH = $this->DBH->query( $query );
 		$STH->setFetchMode(PDO::FETCH_OBJ);
 		while( $row = $STH->fetch() ){
 			$result[] = $row;
 		}
 		return new PDOResult( $result );
 	}
-	protected function _where( $fields, $condition ){
+	protected function _where( $fields, $condition, $limit = NULL, $orderby = NULL ){
 		$result = array();
-		$STH = $this->DBH->query("SELECT $fields FROM " . $this->table . " WHERE $condition");
+		$query = "SELECT $fields FROM " . $this->table . " WHERE $condition";
+		if($limit) $query .= " LIMIT $limit";
+		if($orderby) $query .= " ORDER BY $orderby";
+		$STH = $this->DBH->query( $query );
 		if($STH){
 			$STH->setFetchMode(PDO::FETCH_OBJ);
 			while( $row = $STH->fetch() ){

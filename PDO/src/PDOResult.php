@@ -7,6 +7,10 @@ class PDOResult{
 	public function get(){
 		return $this->result;
 	}
+	public function first(){
+		if( !$this->result ) return NULL;
+		return $this->result[0];
+	}
 	public function count(){
 		return count($this->result);
 	}
