@@ -26,11 +26,15 @@ class PDODB{
 	protected function _query( $q ){
 		$result = array();
 		$STH = $this->DBH->query( $q );
-		$STH->setFetchMode(PDO::FETCH_OBJ);
-		while( $row = $STH->fetch() ){
-			$result[] = $row;
+		if($STH){
+			$STH->setFetchMode(PDO::FETCH_OBJ);
+			while( $row = $STH->fetch() ){
+				$result[] = $row;
+			}
+			return new PDOResult($result);
+		}else{
+			return new PDOResult();
 		}
-		return new PDOResult( $result );
 	}
 	protected function _insert( $data ){
 		$fields = array();
@@ -73,8 +77,8 @@ class PDODB{
 	protected function _where( $fields, $condition, $limit = NULL, $orderby = NULL ){
 		$result = array();
 		$query = "SELECT $fields FROM " . $this->table . " WHERE $condition";
-		if($limit) $query .= " LIMIT $limit";
 		if($orderby) $query .= " ORDER BY $orderby";
+		if($limit) $query .= " LIMIT $limit";
 		$STH = $this->DBH->query( $query );
 		if($STH){
 			$STH->setFetchMode(PDO::FETCH_OBJ);
